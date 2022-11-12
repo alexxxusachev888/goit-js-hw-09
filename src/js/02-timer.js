@@ -20,12 +20,15 @@ const refs = {
 
 refs.startBtn.disabled = true;
 
+let pickrInstance = null;
+
 const options = {
   enableTime: true,
   time_24hr: true,
   defaultDate: new Date(),
   minuteIncrement: 1,
   onClose(selectedDates) {
+    pickrInstance = selectedDates[0];
 
     if (selectedDates[0].getTime() <= this.now.getTime()) {
       /* window.alert('Please choose a date in the future');
@@ -39,8 +42,7 @@ const options = {
   }
 }
 
-const pickrInstatce = flatpickr(refs.pickInput, options).selectedDates[0].getTime();
-console.log(pickrInstatce);
+flatpickr(refs.pickInput, options);
 
 const timer = {
   intervalId: null,
@@ -53,11 +55,7 @@ const timer = {
 
     this.isActive = true;
     this.intervalId = setInterval(() => {
-      const deltaTime = pickrInstatce - Date.now();
-
-      /*    if (deltaTime) {
-           return
-         } */
+      const deltaTime = pickrInstance.getTime() - Date.now();
 
       const time = convertMs(deltaTime);
       updateClock(time);
